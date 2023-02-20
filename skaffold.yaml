@@ -2,7 +2,7 @@ apiVersion: skaffold/v2alpha3
 kind: Config
 build:
   artifacts:
-    - image: proamar/auth
+    - image: amoctagon/auth
       context: auth
       docker:
         dockerfile: Dockerfile
