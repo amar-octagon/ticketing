@@ -10,6 +10,14 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
+    - image: proamar/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.js"
+            dest: .
 deploy:
   kubectl:
     manifests:
