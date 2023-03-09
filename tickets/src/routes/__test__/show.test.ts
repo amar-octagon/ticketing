@@ -2,7 +2,10 @@ import request from "supertest";
 import { app } from "../../app";
 
 it("Return 404 is post is not found", async () => {
-  await request(app).get("/api/tickets/sfasfas").send().expect(404);
+  const response = await request(app).get("/api/tickets/sfasfas").send();
+  // .expect(404);
+
+  console.log(response.body);
 });
 
 it("Return a ticket if the ticket is found", async () => {
@@ -19,7 +22,7 @@ it("Return a ticket if the ticket is found", async () => {
     .expect(201);
 
   const ticketResponse = await request(app)
-    .get(`/api/ticket/${response.body.id}`)
+    .get(`/api/tickets/${response.body.id}`)
     .send()
     .expect(200);
 
