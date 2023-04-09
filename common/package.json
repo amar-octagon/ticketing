@@ -1,7 +1,6 @@
 {
   "name": "@amoctagoninfotech/common",
-
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
@@ -9,7 +8,7 @@
     "build/**/*"
   ],
   "scripts": {
-    "clean": "rm -rf build",
+    "clean": "del -rf build",
     "build": "npm run clean && tsc",
     "pub": "git add . && git commit -m 'updates' && npm version patch && npm run build && npm publish"
   },
