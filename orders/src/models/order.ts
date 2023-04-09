@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import { OrderStatus } from "@amoctagoninfotech/common";
 import { TicketDoc } from "./ticket";
+<<<<<<< HEAD
+=======
+
+export { OrderStatus };
+>>>>>>> 9e80ec38869d84def7dd15bd1cd674018ce4b4b4
 
 interface OrderAttrs {
   userId: string;

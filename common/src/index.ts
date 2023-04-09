@@ -13,7 +13,13 @@ export * from "./middlewares/validate-request";
 export * from "./events/base-listener";
 export * from "./events/base-publisher";
 export * from "./events/subjects";
+export * from "./events/types/order-status";
 export * from "./events/ticket-created-event";
 export * from "./events/ticket-updated-event";
+<<<<<<< HEAD
 
 export * from "./events/types/order-status";
+=======
+export * from "./events/order-cancelled-event";
+export * from "./events/order-created-event";
+>>>>>>> 9e80ec38869d84def7dd15bd1cd674018ce4b4b4

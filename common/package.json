@@ -1,6 +1,10 @@
 {
   "name": "@amoctagoninfotech/common",
+<<<<<<< HEAD
   "version": "1.0.6",
+=======
+  "version": "1.0.9",
+>>>>>>> 9e80ec38869d84def7dd15bd1cd674018ce4b4b4
   "description": "",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
@@ -8,7 +12,7 @@
     "build/**/*"
   ],
   "scripts": {
-    "clean": "del build",
+    "clean": "rm -rf build",
     "build": "npm run clean && tsc",
     "pub": "git add . && git commit -m 'updates' && npm version patch && npm run build && npm publish"
   },

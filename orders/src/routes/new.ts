@@ -1,19 +1,21 @@
+import mongoose from "mongoose";
 import express, { Request, Response } from "express";
 import {
-  BadRequestError,
-  NotFoundError,
-  OrderStatus,
   requireAuth,
   validateRequest,
+  NotFoundError,
+  OrderStatus,
+  BadRequestError,
 } from "@amoctagoninfotech/common";
 import { body } from "express-validator";
-import mongoose from "mongoose";
 import { Ticket } from "../models/ticket";
 import { Order } from "../models/order";
-
-const EXPIRATION_WINDOW_SECONDS = 15 * 60;
+import { OrderCreatedPublisher } from "../events/publishers/order-created-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
+
+const EXPIRATION_WINDOW_SECONDS = 15 * 60;
 
 router.post(
   "/api/orders",
@@ -23,7 +25,7 @@ router.post(
       .not()
       .isEmpty()
       .custom((input: string) => mongoose.Types.ObjectId.isValid(input))
-      .withMessage("Ticket Id must be provided"),
+      .withMessage("TicketId must be provided"),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
@@ -31,14 +33,12 @@ router.post(
 
     // Find the ticket the user is trying to order in the database
     const ticket = await Ticket.findById(ticketId);
-
     if (!ticket) {
       throw new NotFoundError();
     }
 
     // Make sure that this ticket is not already reserved
     const isReserved = await ticket.isReserved();
-
     if (isReserved) {
       throw new BadRequestError("Ticket is already reserved");
     }
@@ -50,16 +50,25 @@ router.post(
     // Build the order and save it to the database
     const order = Order.build({
       userId: req.currentUser!.id,
-      ticket,
-      expiresAt: expiration,
       status: OrderStatus.Created,
+      expiresAt: expiration,
+      ticket,
     });
-
     await order.save();
 
-    // Publish an event that the order was created
+    // Publish an event saying that an order was created
+    new OrderCreatedPublisher(natsWrapper.client).publish({
+      id: order.id,
+      userId: req.currentUser!.id,
+      status: OrderStatus.Created,
+      expiresAt: order.expiresAt.toISOString(),
+      ticket: {
+        id: ticket.id,
+        price: ticket.price,
+      },
+    });
 
-    res.status(201).json(order);
+    res.status(201).send(order);
   }
 );
 
