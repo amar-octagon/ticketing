@@ -8,8 +8,11 @@ interface Event {
 
 export abstract class Publisher<T extends Event> {
   abstract subject: T["subject"];
+  protected client: Stan;
 
-  constructor(protected client: Stan) {}
+  constructor(client: Stan) {
+    this.client = client;
+  }
 
   publish(data: T["data"]): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -17,9 +20,7 @@ export abstract class Publisher<T extends Event> {
         if (err) {
           return reject(err);
         }
-
         console.log("Event published to subject", this.subject);
-
         resolve();
       });
     });

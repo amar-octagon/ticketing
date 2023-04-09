@@ -1,6 +1,5 @@
 import request from "supertest";
 import { app } from "../../app";
-import { Order } from "../../models/order";
 import { Ticket } from "../../models/ticket";
 import mongoose from "mongoose";
 
@@ -53,7 +52,11 @@ it("fetch the orders of the user", async () => {
     .expect(201);
 
   // Make request to get orders for User #2
-  const response = await request(app).get("/api/orders").set("Cookie", userTwo).send().expect(200);
+  const response = await request(app)
+    .get("/api/orders")
+    .set("Cookie", userTwo)
+    .send()
+    .expect(200);
 
   // Make sure we only got the orders for User #2
   expect(response.body.length).toEqual(2);
